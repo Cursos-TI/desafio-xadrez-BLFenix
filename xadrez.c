@@ -78,9 +78,19 @@ int direcaoMovPeca(int numPeca)
 int quantidadeMovPeca()
 {
     int quantMovPeca = 0;
+    do
+    {
+        print("Quantas casas deseja movimentar a peça? (Max 8)");
+        scanf(" %d", &quantMovPeca);
 
-    print("Quantas casas deseja movimentar a peça? (Max 8)");
-    scanf(" %d", &quantMovPeca);
+        if (quantMovPeca < 0 || quantMovPeca > 8)
+        {
+            print("\nRespeite os limites estabelecidos!\n");
+            continue;
+        }
+    } while (quantMovPeca < 0 || quantMovPeca > 8);
+
+    return quantMovPeca;
 }
 
 void movimentaBispo(int numPeca)
