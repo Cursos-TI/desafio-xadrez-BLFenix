@@ -1,33 +1,56 @@
 #include <stdio.h>
+#include <string.h>
+
+void mensagemLimiteMenu(int varLimite, int minLimite, int maxLimite)
+{
+    if (varLimite < minLimite || varLimite > maxLimite)
+    {
+        printf("\n\nPor favor, respeite os limites estabelecidos! (MIN: %d, MAX: %d)\n\n", minLimite, maxLimite);
+    }
+}
 
 int selecionarPeca()
 {
     int numPeca;
+
+    printf("\nAnalise a lista abaixo:");
+    printf("\n1 - Bispo:");
+    printf("\n2 - Torre:");
+    printf("\n3 - Rainha:");
+    printf("\n4 - Cavalo:");
+
     do
     {
-        printf("\nAnalise a lista abaixo:");
-        printf("\n1 - Bispo:");
-        printf("\n2 - Torre:");
-        printf("\n3 - Rainha:");
-        printf("\n4 - Cavalo:");
 
         printf("\nDigite a peça que deseja mover: ");
-        scanf(" %d \n", &numPeca);
+        scanf(" %d", &numPeca);
 
-        if (numPeca < 1 || numPeca > 4)
-        {
-            printf("\n\nPor favor, selecione a peça de 1 a 3\n\n");
-            continue;
-        }
+        mensagemLimiteMenu(numPeca, 1, 4);
 
-    } while (numPeca != 1 && numPeca != 2 && numPeca != 3);
+    } while (numPeca < 1 || numPeca > 4);
 
-    return numPeca;
+    return (numPeca);
 }
 
-int direcaoMovPeca(int numPeca)
+int quantidadeMovPeca()
+{
+    int quantMovPeca = 0;
+    do
+    {
+        printf("\nQuantas casas deseja movimentar a peça? (Max 8) ");
+        scanf(" %d", &quantMovPeca);
+
+        mensagemLimiteMenu(quantMovPeca, 1, 8);
+
+    } while (quantMovPeca < 1 || quantMovPeca > 8);
+
+    return (quantMovPeca);
+}
+
+int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *quantMovPeca)
 {
     int movPeca = 0;
+    char nomePeca[9] = "";
 
     switch (numPeca)
     {
@@ -39,9 +62,46 @@ int direcaoMovPeca(int numPeca)
         printf("\n3 - Esquerda/cima:");
         printf("\n4 - Esquerda/baixo:");
 
-        printf("\n\nGostaria de movimentar a peça para qual direção?\n");
-        scanf(" %d", &movPeca);
-        return movPeca;
+        do
+        {
+            printf("\n\nGostaria de movimentar a peça para qual direção? ");
+            scanf(" %d", &movPeca);
+
+            mensagemLimiteMenu(movPeca, 1, 4);
+
+        } while (movPeca < 1 || movPeca > 4);
+
+        *quantMovPeca = quantidadeMovPeca();
+        strcpy(nomePeca, (numPeca == 1) ? "o bispo" : "o cavalo");
+
+        switch (movPeca)
+        {
+        case 1:
+            printf("\nMovimentando %s %d casas para a diagonal direita/cima\n", nomePeca, *quantMovPeca);
+            strcpy(direcaoHoriz, "direita");
+            strcpy(direcaoVerti, "cima");
+            break;
+        case 2:
+            printf("\nMovimentando %s %d casas para a diagonal direita/baixo\n", nomePeca, *quantMovPeca);
+            strcpy(direcaoHoriz, "direita");
+            strcpy(direcaoVerti, "baixo");
+            break;
+        case 3:
+            printf("\nMovimentando %s %d casas para a diagonal esquerda/cima\n", nomePeca, *quantMovPeca);
+            strcpy(direcaoHoriz, "esquerda");
+            strcpy(direcaoVerti, "cima");
+            break;
+        case 4:
+            printf("\nMovimentando %s %d casas para a diagonal esquerda/baixo\n", nomePeca, *quantMovPeca);
+            strcpy(direcaoHoriz, "esquerda");
+            strcpy(direcaoVerti, "baixo");
+            break;
+
+        default:
+            break;
+        }
+
+        return (movPeca);
         break;
     case 2: // Peça que se movimenta na horizontal e vertical (2 - Torre)
         printf("\n\nMenu de movimento da Peça:\n");
@@ -50,9 +110,16 @@ int direcaoMovPeca(int numPeca)
         printf("\n3 - Cima:");
         printf("\n4 - Baixo:");
 
-        printf("\n\nGostaria de movimentar a peça para qual direção?\n");
-        scanf(" %d", &movPeca);
-        return movPeca;
+        do
+        {
+            printf("\n\nGostaria de movimentar a peça para qual direção? ");
+            scanf(" %d", &movPeca);
+
+            mensagemLimiteMenu(movPeca, 1, 4);
+
+        } while (movPeca < 1 || movPeca > 4);
+
+        return (movPeca);
         break;
     case 3: // Peça que se movimenta em todas as direções (3 - Rainha)
         printf("\n\nMenu de movimento da Peça:\n");
@@ -65,96 +132,72 @@ int direcaoMovPeca(int numPeca)
         printf("\n7 - Cima:");
         printf("\n8 - Baixo:");
 
-        printf("\n\nGostaria de movimentar a peça para qual direção?\n");
-        scanf(" %d", &movPeca);
-        return movPeca;
+        do
+        {
+            printf("\n\nGostaria de movimentar a peça para qual direção? ");
+            scanf(" %d", &movPeca);
+
+            mensagemLimiteMenu(movPeca, 1, 4);
+
+        } while (movPeca < 1 || movPeca > 4);
+
+        return (movPeca);
         break;
 
     default:
         break;
     }
+
+    printf("\n\nERRO NA COLETA DA DIREÇÃO DE MOVIMENTO DA PEÇA\n\n");
+    return 0;
 }
 
-int quantidadeMovPeca()
+void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
 {
-    int quantMovPeca = 0;
-    do
+    if (quantMovPeca > 0)
     {
-        print("Quantas casas deseja movimentar a peça? (Max 8)");
-        scanf(" %d", &quantMovPeca);
-
-        if (quantMovPeca < 0 || quantMovPeca > 8)
-        {
-            print("\nRespeite os limites estabelecidos!\n");
-            continue;
-        }
-    } while (quantMovPeca < 0 || quantMovPeca > 8);
-
-    return quantMovPeca;
+        printf(" %s, ", direcaoHoriz);
+        printf(" %s.\n", direcaoVerti);
+        quantMovPeca--;
+        movimentaBispo(quantMovPeca, direcaoHoriz, direcaoVerti);
+    }
 }
 
-void movimentaBispo(int numPeca)
+void movimentaTorre()
 {
 }
 
-void movimentaTorre(int numPeca)
+void movimentaRainha()
 {
 }
 
-void movimentaRainha(int numPeca)
-{
-}
-
-void movimentaCavalo(int numPeca)
+void movimentaCavalo()
 {
 }
 
 int main()
 {
-    // const char direita = 'direita';
-    // const char esquerda = 'esquerda';
-    // const char cima = 'cima';
-    // const char baixo = 'baixo';
-
     // Selecionando a peça a ser movimentada:
 
     const int numPeca = selecionarPeca();
+    int quantMovPeca;
+    char direcaoHoriz[9] = "", direcaoVerti[6] = "";
 
     switch (numPeca)
     {
     case 1: // Bispo
-        int movPeca = direcaoMovPeca(numPeca);
-        int quantCasas = quantidadeMovPeca();
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, &quantMovPeca);
 
-        switch (movPeca)
-        {
-        case 1:
-            printf("\nMovimentando o bispo %d casas para a diagonal direita/cima\n", quantCasas);
-            break;
-        case 2:
-            printf("\nMovimentando o bispo %d casas para a diagonal direita/baixo\n", quantCasas);
-            break;
-        case 3:
-            printf("\nMovimentando o bispo %d casas para a diagonal esquerda/cima\n", quantCasas);
-            break;
-        case 4:
-            printf("\nMovimentando o bispo %d casas para a diagonal esquerda/baixo\n", quantCasas);
-            break;
-
-        default:
-            break;
-        }
-
-        movimentaBispo(numPeca);
+        movimentaBispo(quantMovPeca, direcaoHoriz, direcaoVerti);
         break;
     case 2: // Torre
-        movimentaTorre(numPeca);
+        movimentaTorre();
         break;
     case 3: // Rainha
-        movimentaRainha(numPeca);
+        movimentaRainha();
         break;
     case 4: // Cavalo
-        movimentaCavalo(numPeca);
+        movimentaCavalo();
         break;
 
     default:
