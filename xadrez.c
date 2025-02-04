@@ -95,27 +95,6 @@ int quantidadeMovPeca()
 
 void movimentaBispo(int numPeca)
 {
-    int movPeca = direcaoMovPeca(numPeca);
-    int quantCasas = quantidadeMovPeca();
-
-    switch (movPeca)
-    {
-    case 1:
-        printf("\nMovimentando o bispo %d casas para a diagonal direita/cima\n", quantCasas);
-        break;
-    case 2:
-        printf("\nMovimentando o bispo %d casas para a diagonal direita/baixo\n", quantCasas);
-        break;
-    case 3:
-        printf("\nMovimentando o bispo %d casas para a diagonal esquerda/cima\n", quantCasas);
-        break;
-    case 4:
-        printf("\nMovimentando o bispo %d casas para a diagonal esquerda/baixo\n", quantCasas);
-        break;
-
-    default:
-        break;
-    }
 }
 
 void movimentaTorre(int numPeca)
@@ -144,6 +123,28 @@ int main()
     switch (numPeca)
     {
     case 1: // Bispo
+        int movPeca = direcaoMovPeca(numPeca);
+        int quantCasas = quantidadeMovPeca();
+
+        switch (movPeca)
+        {
+        case 1:
+            printf("\nMovimentando o bispo %d casas para a diagonal direita/cima\n", quantCasas);
+            break;
+        case 2:
+            printf("\nMovimentando o bispo %d casas para a diagonal direita/baixo\n", quantCasas);
+            break;
+        case 3:
+            printf("\nMovimentando o bispo %d casas para a diagonal esquerda/cima\n", quantCasas);
+            break;
+        case 4:
+            printf("\nMovimentando o bispo %d casas para a diagonal esquerda/baixo\n", quantCasas);
+            break;
+
+        default:
+            break;
+        }
+
         movimentaBispo(numPeca);
         break;
     case 2: // Torre
