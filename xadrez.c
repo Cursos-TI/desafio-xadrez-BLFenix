@@ -14,6 +14,22 @@ void mensagemLimiteMenu(int varLimite, int minLimite, int maxLimite)
     }
 }
 
+int receberDirMovPeca(int minLimite, int maxLimite)
+{
+    int movPeca;
+
+    do
+    {
+        printf("\n\nGostaria de movimentar a peça para qual direção? ");
+        scanf(" %d", &movPeca);
+
+        mensagemLimiteMenu(movPeca, minLimite, maxLimite);
+
+    } while (movPeca < minLimite || movPeca > maxLimite);
+
+    return movPeca;
+}
+
 int selecionarPeca()
 {
     int numPeca;
@@ -175,14 +191,7 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char d
 
         mostrarMenuMov(numPeca);
 
-        do
-        {
-            printf("\n\nGostaria de movimentar a peça para qual direção? ");
-            scanf(" %d", &movPeca);
-
-            mensagemLimiteMenu(movPeca, 1, 4);
-
-        } while (movPeca < 1 || movPeca > 4);
+        movPeca = receberDirMovPeca(1, 4);
 
         *quantMovPeca = quantidadeMovPeca();
 
@@ -194,14 +203,7 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char d
 
         mostrarMenuMov(numPeca);
 
-        do
-        {
-            printf("\n\nGostaria de movimentar a peça para qual direção? ");
-            scanf(" %d", &movPeca);
-
-            mensagemLimiteMenu(movPeca, 5, 8);
-
-        } while (movPeca < 5 || movPeca > 8);
+        movPeca = receberDirMovPeca(5, 8);
 
         *quantMovPeca = quantidadeMovPeca();
 
@@ -213,14 +215,9 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char d
 
         mostrarMenuMov(numPeca);
 
-        do
-        {
-            printf("\n\nGostaria de movimentar a peça para qual direção? ");
-            scanf(" %d", &movPeca);
+        movPeca = receberDirMovPeca(1, 8);
 
-            mensagemLimiteMenu(movPeca, 1, 8);
-
-        } while (movPeca < 1 || movPeca > 8);
+        *quantMovPeca = quantidadeMovPeca();
 
         return (movPeca);
         break;
@@ -285,7 +282,9 @@ int main()
         movimentaTorre(quantMovPeca, direcaoMov);
         break;
     case ID_RAINHA:
-        movimentaRainha();
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
+
+        movimentaRainha(quantMovPeca, direcaoMov);
         break;
     case ID_CAVALO:
         movimentaCavalo();
@@ -295,9 +294,6 @@ int main()
         printf("\n\nERRO NO CÓDIGO!\n\n");
         break;
     }
-
-    // Implementação de Movimentação da Torre
-    // Sugestão: Utilize uma estrutura de repetição para simular a movimentação da Torre para a direita.
 
     // Implementação de Movimentação da Rainha
     // Sugestão: Utilize uma estrutura de repetição para simular a movimentação da Rainha para a esquerda.
