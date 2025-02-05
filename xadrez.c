@@ -56,7 +56,20 @@ void mostrarMenuMov(int numPeca)
 {
     if (numPeca == ID_BISPO || numPeca == ID_RAINHA || numPeca == ID_CAVALO)
     {
-        /* code */
+        printf("\n\nMenu de movimento da Peça:\n");
+        printf("\n1 - Direita/cima:");
+        printf("\n2 - Direita/baixo:");
+        printf("\n3 - Esquerda/cima:");
+        printf("\n4 - Esquerda/baixo:");
+    }
+
+    if (numPeca == ID_TORRE || numPeca == ID_RAINHA)
+    {
+        (numPeca == ID_TORRE) ? printf("\n\nMenu de movimento da Peça:\n") : 0;
+        printf("\n5 - Direita:");
+        printf("\n6 - Esquerda:");
+        printf("\n7 - Cima:");
+        printf("\n8 - Baixo:");
     }
 }
 
@@ -117,11 +130,8 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *q
     {
     case ID_BISPO:
     case ID_CAVALO: // Peças que se movimentam na diagonal
-        printf("\n\nMenu de movimento da Peça:\n");
-        printf("\n1 - Direita/cima:");
-        printf("\n2 - Direita/baixo:");
-        printf("\n3 - Esquerda/cima:");
-        printf("\n4 - Esquerda/baixo:");
+
+        mostrarMenuMov(numPeca);
 
         do
         {
@@ -139,42 +149,32 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *q
         return (movPeca);
         break;
     case ID_TORRE: // Peça que se movimenta na horizontal e vertical
-        printf("\n\nMenu de movimento da Peça:\n");
-        printf("\n5 - Direita:");
-        printf("\n6 - Esquerda:");
-        printf("\n7 - Cima:");
-        printf("\n8 - Baixo:");
+
+        mostrarMenuMov(numPeca);
 
         do
         {
             printf("\n\nGostaria de movimentar a peça para qual direção? ");
             scanf(" %d", &movPeca);
 
-            mensagemLimiteMenu(movPeca, 1, 4);
+            mensagemLimiteMenu(movPeca, 5, 8);
 
-        } while (movPeca < 1 || movPeca > 4);
+        } while (movPeca < 5 || movPeca > 8);
 
         return (movPeca);
         break;
     case ID_RAINHA: // Peça que se movimenta em todas as direções
-        printf("\n\nMenu de movimento da Peça:\n");
-        printf("\n1 - Direita/cima:");
-        printf("\n2 - Direita/baixo:");
-        printf("\n3 - Esquerda/cima:");
-        printf("\n4 - Esquerda/baixo:");
-        printf("\n5 - Direita:");
-        printf("\n6 - Esquerda:");
-        printf("\n7 - Cima:");
-        printf("\n8 - Baixo:");
+
+        mostrarMenuMov(numPeca);
 
         do
         {
             printf("\n\nGostaria de movimentar a peça para qual direção? ");
             scanf(" %d", &movPeca);
 
-            mensagemLimiteMenu(movPeca, 1, 4);
+            mensagemLimiteMenu(movPeca, 1, 8);
 
-        } while (movPeca < 1 || movPeca > 4);
+        } while (movPeca < 1 || movPeca > 8);
 
         return (movPeca);
         break;
