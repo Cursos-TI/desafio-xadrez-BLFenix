@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#define ID_BISPO 1
+#define ID_TORRE 2
+#define ID_RAINHA 3
+#define ID_CAVALO 4
+
 void mensagemLimiteMenu(int varLimite, int minLimite, int maxLimite)
 {
     if (varLimite < minLimite || varLimite > maxLimite)
@@ -14,10 +19,10 @@ int selecionarPeca()
     int numPeca;
 
     printf("\nAnalise a lista abaixo:");
-    printf("\n1 - Bispo:");
-    printf("\n2 - Torre:");
-    printf("\n3 - Rainha:");
-    printf("\n4 - Cavalo:");
+    printf("\n%d - Bispo:", ID_BISPO);
+    printf("\n%d - Torre:", ID_TORRE);
+    printf("\n%d - Rainha:", ID_RAINHA);
+    printf("\n%d - Cavalo:", ID_CAVALO);
 
     do
     {
@@ -47,15 +52,71 @@ int quantidadeMovPeca()
     return (quantMovPeca);
 }
 
-int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *quantMovPeca)
+void mostrarMenuMov(int numPeca)
 {
-    int movPeca = 0;
+    if (numPeca == ID_BISPO || numPeca == ID_RAINHA || numPeca == ID_CAVALO)
+    {
+        /* code */
+    }
+}
+
+void diagonalMovPeca(int movPeca, int numPeca, char direcaoHoriz[], char direcaoVerti[], int quantMovPeca)
+{
+
     char nomePeca[9] = "";
 
     switch (numPeca)
     {
+    case ID_BISPO:
+        strcpy(nomePeca, "o bispo");
+        break;
+    case ID_CAVALO:
+        strcpy(nomePeca, "o cavalo");
+        break;
+    case ID_RAINHA:
+        strcpy(nomePeca, "a rainha");
+        break;
+
+    default:
+        break;
+    }
+
+    switch (movPeca)
+    {
     case 1:
-    case 4: // Peças que se movimentam na diagonal (1 - Bispo; 4 - Cavalo)
+        printf("\nMovimentando %s %d casas para a diagonal direita/cima\n", nomePeca, quantMovPeca);
+        strcpy(direcaoHoriz, "direita");
+        strcpy(direcaoVerti, "cima");
+        break;
+    case 2:
+        printf("\nMovimentando %s %d casas para a diagonal direita/baixo\n", nomePeca, quantMovPeca);
+        strcpy(direcaoHoriz, "direita");
+        strcpy(direcaoVerti, "baixo");
+        break;
+    case 3:
+        printf("\nMovimentando %s %d casas para a diagonal esquerda/cima\n", nomePeca, quantMovPeca);
+        strcpy(direcaoHoriz, "esquerda");
+        strcpy(direcaoVerti, "cima");
+        break;
+    case 4:
+        printf("\nMovimentando %s %d casas para a diagonal esquerda/baixo\n", nomePeca, quantMovPeca);
+        strcpy(direcaoHoriz, "esquerda");
+        strcpy(direcaoVerti, "baixo");
+        break;
+
+    default:
+        break;
+    }
+}
+
+int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *quantMovPeca)
+{
+    int movPeca = 0;
+
+    switch (numPeca)
+    {
+    case ID_BISPO:
+    case ID_CAVALO: // Peças que se movimentam na diagonal
         printf("\n\nMenu de movimento da Peça:\n");
         printf("\n1 - Direita/cima:");
         printf("\n2 - Direita/baixo:");
@@ -72,43 +133,17 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *q
         } while (movPeca < 1 || movPeca > 4);
 
         *quantMovPeca = quantidadeMovPeca();
-        strcpy(nomePeca, (numPeca == 1) ? "o bispo" : "o cavalo");
 
-        switch (movPeca)
-        {
-        case 1:
-            printf("\nMovimentando %s %d casas para a diagonal direita/cima\n", nomePeca, *quantMovPeca);
-            strcpy(direcaoHoriz, "direita");
-            strcpy(direcaoVerti, "cima");
-            break;
-        case 2:
-            printf("\nMovimentando %s %d casas para a diagonal direita/baixo\n", nomePeca, *quantMovPeca);
-            strcpy(direcaoHoriz, "direita");
-            strcpy(direcaoVerti, "baixo");
-            break;
-        case 3:
-            printf("\nMovimentando %s %d casas para a diagonal esquerda/cima\n", nomePeca, *quantMovPeca);
-            strcpy(direcaoHoriz, "esquerda");
-            strcpy(direcaoVerti, "cima");
-            break;
-        case 4:
-            printf("\nMovimentando %s %d casas para a diagonal esquerda/baixo\n", nomePeca, *quantMovPeca);
-            strcpy(direcaoHoriz, "esquerda");
-            strcpy(direcaoVerti, "baixo");
-            break;
-
-        default:
-            break;
-        }
+        diagonalMovPeca(movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca); // Mostra a direção do movimento para as peças que se mexem na diagonal
 
         return (movPeca);
         break;
-    case 2: // Peça que se movimenta na horizontal e vertical (2 - Torre)
+    case ID_TORRE: // Peça que se movimenta na horizontal e vertical
         printf("\n\nMenu de movimento da Peça:\n");
-        printf("\n1 - Direita:");
-        printf("\n2 - Esquerda:");
-        printf("\n3 - Cima:");
-        printf("\n4 - Baixo:");
+        printf("\n5 - Direita:");
+        printf("\n6 - Esquerda:");
+        printf("\n7 - Cima:");
+        printf("\n8 - Baixo:");
 
         do
         {
@@ -121,7 +156,7 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *q
 
         return (movPeca);
         break;
-    case 3: // Peça que se movimenta em todas as direções (3 - Rainha)
+    case ID_RAINHA: // Peça que se movimenta em todas as direções
         printf("\n\nMenu de movimento da Peça:\n");
         printf("\n1 - Direita/cima:");
         printf("\n2 - Direita/baixo:");
@@ -185,18 +220,18 @@ int main()
 
     switch (numPeca)
     {
-    case 1: // Bispo
+    case ID_BISPO:
         direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, &quantMovPeca);
 
         movimentaBispo(quantMovPeca, direcaoHoriz, direcaoVerti);
         break;
-    case 2: // Torre
+    case ID_TORRE:
         movimentaTorre();
         break;
-    case 3: // Rainha
+    case ID_RAINHA:
         movimentaRainha();
         break;
-    case 4: // Cavalo
+    case ID_CAVALO:
         movimentaCavalo();
         break;
 
