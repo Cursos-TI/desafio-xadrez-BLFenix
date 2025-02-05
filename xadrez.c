@@ -89,6 +89,8 @@ void mostrarMenuMov(int numPeca)
     }
 }
 
+// Mostra a direção do movimento para as peças que se mexem na diagonal
+
 void diagonalMovPeca(int movPeca, int numPeca, char direcaoHoriz[], char direcaoVerti[], int quantMovPeca)
 {
 
@@ -138,6 +140,8 @@ void diagonalMovPeca(int movPeca, int numPeca, char direcaoHoriz[], char direcao
     }
 }
 
+// Mostra a direção do movimento para as peças que se mexem em linha reta
+
 void retilineoMovPeca(int movPeca, int numPeca, char direcaoMov[], int quantMovPeca)
 {
 
@@ -180,7 +184,7 @@ void retilineoMovPeca(int movPeca, int numPeca, char direcaoMov[], int quantMovP
     }
 }
 
-int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char direcaoMov[], int *quantMovPeca)
+void direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char direcaoMov[], int *quantMovPeca)
 {
     int movPeca = 0;
 
@@ -195,9 +199,8 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char d
 
         *quantMovPeca = quantidadeMovPeca();
 
-        diagonalMovPeca(movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca); // Mostra a direção do movimento para as peças que se mexem na diagonal
+        diagonalMovPeca(movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca);
 
-        return (movPeca);
         break;
     case ID_TORRE: // Peça que se movimenta na horizontal e vertical
 
@@ -207,9 +210,8 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char d
 
         *quantMovPeca = quantidadeMovPeca();
 
-        retilineoMovPeca(movPeca, numPeca, direcaoMov, *quantMovPeca); // Mostra a direção do movimento para as peças que se mexem em linha reta
+        retilineoMovPeca(movPeca, numPeca, direcaoMov, *quantMovPeca);
 
-        return (movPeca);
         break;
     case ID_RAINHA: // Peça que se movimenta em todas as direções
 
@@ -219,15 +221,21 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char d
 
         *quantMovPeca = quantidadeMovPeca();
 
-        return (movPeca);
+        if (movPeca >= 1 && movPeca <= 4)
+        {
+            diagonalMovPeca(movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca);
+        }
+        else if (movPeca >= 5 && movPeca <= 8)
+        {
+            retilineoMovPeca(movPeca, numPeca, direcaoMov, *quantMovPeca);
+        }
+
         break;
 
     default:
+        printf("\n\nERRO NA COLETA DA DIREÇÃO DE MOVIMENTO DA PEÇA\n\n");
         break;
     }
-
-    printf("\n\nERRO NA COLETA DA DIREÇÃO DE MOVIMENTO DA PEÇA\n\n");
-    return 0;
 }
 
 void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
@@ -236,6 +244,7 @@ void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
     {
         printf(" %s, ", direcaoHoriz);
         printf(" %s.\n", direcaoVerti);
+
         quantMovPeca--;
         movimentaBispo(quantMovPeca, direcaoHoriz, direcaoVerti);
     }
@@ -243,7 +252,6 @@ void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
 
 void movimentaTorre(int quantMovPeca, char direcaoMov[])
 {
-
     if (quantMovPeca > 0)
     {
         (quantMovPeca == 1) ? printf(" %s. \n", direcaoMov) : printf(" %s, \n", direcaoMov);
@@ -253,8 +261,23 @@ void movimentaTorre(int quantMovPeca, char direcaoMov[])
     }
 }
 
-void movimentaRainha()
+void movimentaRainha(int quantMovPeca, char direcaoMov[], char direcaoHoriz[], char direcaoVerti[])
 {
+    if (quantMovPeca > 0)
+    {
+        if (strcmp(direcaoMov, "") == 0)
+        {
+            printf(" %s, ", direcaoHoriz);
+            printf(" %s.\n", direcaoVerti);
+        }
+        else
+        {
+            (quantMovPeca == 1) ? printf(" %s. \n", direcaoMov) : printf(" %s, \n", direcaoMov);
+        }
+
+        quantMovPeca--;
+        movimentaRainha(quantMovPeca, direcaoMov, direcaoHoriz, direcaoVerti);
+    }
 }
 
 void movimentaCavalo()
@@ -284,7 +307,7 @@ int main()
     case ID_RAINHA:
         direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
 
-        movimentaRainha(quantMovPeca, direcaoMov);
+        movimentaRainha(quantMovPeca, direcaoMov, direcaoHoriz, direcaoVerti);
         break;
     case ID_CAVALO:
         movimentaCavalo();
@@ -295,8 +318,9 @@ int main()
         break;
     }
 
-    // Implementação de Movimentação da Rainha
-    // Sugestão: Utilize uma estrutura de repetição para simular a movimentação da Rainha para a esquerda.
+    printf("\n\nVeja suas opções: \n");
+    printf("\n\n1 - Reiniciar movimentação \n");
+    printf("\n\n2 - Finalizar código\n");
 
     // Nível Aventureiro - Movimentação do Cavalo
     // Sugestão: Utilize loops aninhados para simular a movimentação do Cavalo em L.
