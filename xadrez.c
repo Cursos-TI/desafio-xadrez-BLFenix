@@ -122,7 +122,49 @@ void diagonalMovPeca(int movPeca, int numPeca, char direcaoHoriz[], char direcao
     }
 }
 
-int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *quantMovPeca)
+void retilineoMovPeca(int movPeca, int numPeca, char direcaoMov[], int quantMovPeca)
+{
+
+    char nomePeca[9] = "";
+
+    switch (numPeca)
+    {
+    case ID_TORRE:
+        strcpy(nomePeca, "a torre");
+        break;
+    case ID_RAINHA:
+        strcpy(nomePeca, "a rainha");
+        break;
+
+    default:
+        break;
+    }
+
+    switch (movPeca)
+    {
+    case 5: // direita
+        printf("\nMovimentando %s %d casas para a direita\n", nomePeca, quantMovPeca);
+        strcpy(direcaoMov, "direita");
+        break;
+    case 6: // esquerda
+        printf("\nMovimentando %s %d casas para a esquerda\n", nomePeca, quantMovPeca);
+        strcpy(direcaoMov, "esquerda");
+        break;
+    case 7: // cima
+        printf("\nMovimentando %s %d casas para cima\n", nomePeca, quantMovPeca);
+        strcpy(direcaoMov, "cima");
+        break;
+    case 8: // baixo
+        printf("\nMovimentando %s %d casas para baixo\n", nomePeca, quantMovPeca);
+        strcpy(direcaoMov, "baixo");
+        break;
+
+    default:
+        break;
+    }
+}
+
+int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char direcaoMov[], int *quantMovPeca)
 {
     int movPeca = 0;
 
@@ -161,6 +203,10 @@ int direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], int *q
 
         } while (movPeca < 5 || movPeca > 8);
 
+        *quantMovPeca = quantidadeMovPeca();
+
+        retilineoMovPeca(movPeca, numPeca, direcaoMov, *quantMovPeca); // Mostra a direção do movimento para as peças que se mexem em linha reta
+
         return (movPeca);
         break;
     case ID_RAINHA: // Peça que se movimenta em todas as direções
@@ -198,8 +244,16 @@ void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
     }
 }
 
-void movimentaTorre()
+void movimentaTorre(int quantMovPeca, char direcaoMov[])
 {
+
+    if (quantMovPeca > 0)
+    {
+        (quantMovPeca == 1) ? printf(" %s. \n", direcaoMov) : printf(" %s, \n", direcaoMov);
+
+        quantMovPeca--;
+        movimentaTorre(quantMovPeca, direcaoMov);
+    }
 }
 
 void movimentaRainha()
@@ -216,17 +270,19 @@ int main()
 
     const int numPeca = selecionarPeca();
     int quantMovPeca;
-    char direcaoHoriz[9] = "", direcaoVerti[6] = "";
+    char direcaoHoriz[9] = "", direcaoVerti[6] = "", direcaoMov[9] = "";
 
     switch (numPeca)
     {
     case ID_BISPO:
-        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, &quantMovPeca);
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
 
         movimentaBispo(quantMovPeca, direcaoHoriz, direcaoVerti);
         break;
     case ID_TORRE:
-        movimentaTorre();
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
+
+        movimentaTorre(quantMovPeca, direcaoMov);
         break;
     case ID_RAINHA:
         movimentaRainha();
@@ -239,12 +295,6 @@ int main()
         printf("\n\nERRO NO CÓDIGO!\n\n");
         break;
     }
-
-    // Nível Novato - Movimentação das Peças
-    // Sugestão: Declare variáveis constantes para representar o número de casas que cada peça pode se mover.
-
-    // Implementação de Movimentação do Bispo
-    // Sugestão: Utilize uma estrutura de repetição para simular a movimentação do Bispo em diagonal.
 
     // Implementação de Movimentação da Torre
     // Sugestão: Utilize uma estrutura de repetição para simular a movimentação da Torre para a direita.
