@@ -77,6 +77,14 @@ void mostrarMenuMov(int numPeca)
         printf("\n2 - Direita/baixo:");
         printf("\n3 - Esquerda/cima:");
         printf("\n4 - Esquerda/baixo:");
+
+        if (numPeca == ID_CAVALO)
+        {
+            printf("\n5 - Cima/direita:");
+            printf("\n6 - Baixo/direita:");
+            printf("\n7 - Cima/esquerda:");
+            printf("\n8 - Baixo/esquerda:");
+        }
     }
 
     if (numPeca == ID_TORRE || numPeca == ID_RAINHA)
@@ -91,10 +99,23 @@ void mostrarMenuMov(int numPeca)
 
 // Mostra a direção do movimento para as peças que se mexem na diagonal
 
+void mostrarMovDiag(int numPeca, int quantMovPeca, char nomePeca[], char textMovPeca[])
+{
+    if (numPeca == ID_CAVALO)
+    {
+        printf("\nMovimentando %s para a diagonal %s:\n", nomePeca, textMovPeca);
+    }
+    else
+    {
+        printf("\nMovimentando %s %d casas para a diagonal %s:\n", nomePeca, quantMovPeca, textMovPeca);
+    }
+}
+
 void diagonalMovPeca(int movPeca, int numPeca, char direcaoHoriz[], char direcaoVerti[], int quantMovPeca)
 {
 
     char nomePeca[9] = "";
+    char textMovPeca[15] = "";
 
     switch (numPeca)
     {
@@ -114,23 +135,39 @@ void diagonalMovPeca(int movPeca, int numPeca, char direcaoHoriz[], char direcao
 
     switch (movPeca)
     {
+    case 5: // Para auxiliar a coleta do movimento do cavalo
     case 1:
-        printf("\nMovimentando %s %d casas para a diagonal direita/cima\n", nomePeca, quantMovPeca);
+        strcpy(textMovPeca, ((movPeca == 1) ? "direita/cima" : "cima/direita"));
+
+        mostrarMovDiag(numPeca, quantMovPeca, nomePeca, textMovPeca);
+
         strcpy(direcaoHoriz, "direita");
         strcpy(direcaoVerti, "cima");
         break;
+    case 7: // Para auxiliar a coleta do movimento do cavalo
     case 2:
-        printf("\nMovimentando %s %d casas para a diagonal direita/baixo\n", nomePeca, quantMovPeca);
+        strcpy(textMovPeca, ((movPeca == 2) ? "direita/cima" : "cima/direita"));
+
+        mostrarMovDiag(numPeca, quantMovPeca, nomePeca, textMovPeca);
+
         strcpy(direcaoHoriz, "direita");
         strcpy(direcaoVerti, "baixo");
         break;
+    case 6: // Para auxiliar a coleta do movimento do cavalo
     case 3:
-        printf("\nMovimentando %s %d casas para a diagonal esquerda/cima\n", nomePeca, quantMovPeca);
+        strcpy(textMovPeca, ((movPeca == 3) ? "direita/cima" : "cima/direita"));
+
+        mostrarMovDiag(numPeca, quantMovPeca, nomePeca, textMovPeca);
+
         strcpy(direcaoHoriz, "esquerda");
         strcpy(direcaoVerti, "cima");
         break;
+    case 8: // Para auxiliar a coleta do movimento do cavalo
     case 4:
-        printf("\nMovimentando %s %d casas para a diagonal esquerda/baixo\n", nomePeca, quantMovPeca);
+        strcpy(textMovPeca, ((movPeca == 4) ? "direita/cima" : "cima/direita"));
+
+        mostrarMovDiag(numPeca, quantMovPeca, nomePeca, textMovPeca);
+
         strcpy(direcaoHoriz, "esquerda");
         strcpy(direcaoVerti, "baixo");
         break;
@@ -184,10 +221,8 @@ void retilineoMovPeca(int movPeca, int numPeca, char direcaoMov[], int quantMovP
     }
 }
 
-void direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char direcaoMov[], int *quantMovPeca)
+void direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char direcaoMov[], int *quantMovPeca, int *movPeca)
 {
-    int movPeca = 0;
-
     switch (numPeca)
     {
     case ID_BISPO:
@@ -195,39 +230,39 @@ void direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char 
 
         mostrarMenuMov(numPeca);
 
-        movPeca = receberDirMovPeca(1, 4);
+        *movPeca = (numPeca == ID_BISPO) ? receberDirMovPeca(1, 4) : receberDirMovPeca(1, 8);
 
-        *quantMovPeca = quantidadeMovPeca();
+        *quantMovPeca = (numPeca == ID_BISPO) ? quantidadeMovPeca() : 0;
 
-        diagonalMovPeca(movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca);
+        diagonalMovPeca(*movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca);
 
         break;
     case ID_TORRE: // Peça que se movimenta na horizontal e vertical
 
         mostrarMenuMov(numPeca);
 
-        movPeca = receberDirMovPeca(5, 8);
+        *movPeca = receberDirMovPeca(5, 8);
 
         *quantMovPeca = quantidadeMovPeca();
 
-        retilineoMovPeca(movPeca, numPeca, direcaoMov, *quantMovPeca);
+        retilineoMovPeca(*movPeca, numPeca, direcaoMov, *quantMovPeca);
 
         break;
     case ID_RAINHA: // Peça que se movimenta em todas as direções
 
         mostrarMenuMov(numPeca);
 
-        movPeca = receberDirMovPeca(1, 8);
+        *movPeca = receberDirMovPeca(1, 8);
 
         *quantMovPeca = quantidadeMovPeca();
 
-        if (movPeca >= 1 && movPeca <= 4)
+        if (*movPeca >= 1 && *movPeca <= 4)
         {
-            diagonalMovPeca(movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca);
+            diagonalMovPeca(*movPeca, numPeca, direcaoHoriz, direcaoVerti, *quantMovPeca);
         }
-        else if (movPeca >= 5 && movPeca <= 8)
+        else if (*movPeca >= 5 && *movPeca <= 8)
         {
-            retilineoMovPeca(movPeca, numPeca, direcaoMov, *quantMovPeca);
+            retilineoMovPeca(*movPeca, numPeca, direcaoMov, *quantMovPeca);
         }
 
         break;
@@ -240,6 +275,8 @@ void direcaoMovPeca(int numPeca, char direcaoHoriz[], char direcaoVerti[], char 
 
 void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
 {
+    printf("\n");
+
     if (quantMovPeca > 0)
     {
         printf(" %s, ", direcaoHoriz);
@@ -252,10 +289,11 @@ void movimentaBispo(int quantMovPeca, char direcaoHoriz[], char direcaoVerti[])
 
 void movimentaTorre(int quantMovPeca, char direcaoMov[])
 {
+    printf("\n");
+
     if (quantMovPeca > 0)
     {
         (quantMovPeca == 1) ? printf(" %s. \n", direcaoMov) : printf(" %s, \n", direcaoMov);
-
         quantMovPeca--;
         movimentaTorre(quantMovPeca, direcaoMov);
     }
@@ -263,6 +301,8 @@ void movimentaTorre(int quantMovPeca, char direcaoMov[])
 
 void movimentaRainha(int quantMovPeca, char direcaoMov[], char direcaoHoriz[], char direcaoVerti[])
 {
+    printf("\n");
+
     if (quantMovPeca > 0)
     {
         if (strcmp(direcaoMov, "") == 0)
@@ -274,14 +314,28 @@ void movimentaRainha(int quantMovPeca, char direcaoMov[], char direcaoHoriz[], c
         {
             (quantMovPeca == 1) ? printf(" %s. \n", direcaoMov) : printf(" %s, \n", direcaoMov);
         }
-
         quantMovPeca--;
         movimentaRainha(quantMovPeca, direcaoMov, direcaoHoriz, direcaoVerti);
     }
 }
 
-void movimentaCavalo()
+void movimentaCavalo(int movePeca, char direcaoHoriz[], char direcaoVerti[])
 {
+    for (int i = 0, j = 3; i < 3 && j > 0; i++, j--)
+    {
+        printf("\n");
+
+        if (movePeca >= 1 && movePeca <= 4)
+        {
+            printf("%s, ", direcaoHoriz);
+            (j == 1) ? printf("%s. \n", direcaoVerti) : 0;
+        }
+        else if (movePeca >= 5 && movePeca <= 8)
+        {
+            printf("%s, ", direcaoVerti);
+            (j == 1) ? printf("%s. \n", direcaoHoriz) : 0;
+        }
+    }
 }
 
 int main()
@@ -289,28 +343,31 @@ int main()
     // Selecionando a peça a ser movimentada:
 
     const int numPeca = selecionarPeca();
-    int quantMovPeca;
+
+    int quantMovPeca, movPeca;
     char direcaoHoriz[9] = "", direcaoVerti[6] = "", direcaoMov[9] = "";
 
     switch (numPeca)
     {
     case ID_BISPO:
-        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca, &movPeca);
 
         movimentaBispo(quantMovPeca, direcaoHoriz, direcaoVerti);
         break;
     case ID_TORRE:
-        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca, &movPeca);
 
         movimentaTorre(quantMovPeca, direcaoMov);
         break;
     case ID_RAINHA:
-        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca);
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca, &movPeca);
 
         movimentaRainha(quantMovPeca, direcaoMov, direcaoHoriz, direcaoVerti);
         break;
     case ID_CAVALO:
-        movimentaCavalo();
+        direcaoMovPeca(numPeca, direcaoHoriz, direcaoVerti, direcaoMov, &quantMovPeca, &movPeca);
+
+        movimentaCavalo(movPeca, direcaoHoriz, direcaoVerti);
         break;
 
     default:
@@ -321,14 +378,6 @@ int main()
     printf("\n\nVeja suas opções: \n");
     printf("\n\n1 - Reiniciar movimentação \n");
     printf("\n\n2 - Finalizar código\n");
-
-    // Nível Aventureiro - Movimentação do Cavalo
-    // Sugestão: Utilize loops aninhados para simular a movimentação do Cavalo em L.
-    // Um loop pode representar a movimentação horizontal e outro vertical.
-
-    // Nível Mestre - Funções Recursivas e Loops Aninhados
-    // Sugestão: Substitua as movimentações das peças por funções recursivas.
-    // Exemplo: Crie uma função recursiva para o movimento do Bispo.
 
     // Sugestão: Implemente a movimentação do Cavalo utilizando loops com variáveis múltiplas e condições avançadas.
     // Inclua o uso de continue e break dentro dos loops.
